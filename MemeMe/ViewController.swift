@@ -14,58 +14,66 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var imagePickerView: UIImageView!
     @IBOutlet weak var photoLibraryButton: UIBarButtonItem!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
+    @IBOutlet weak var uiToolBar: UIToolbar!
     
-
+    
+    
     let textAttributes: [NSAttributedString.Key: Any] = [
         NSAttributedString.Key.strokeColor: UIColor.black,
         NSAttributedString.Key.foregroundColor: UIColor.white,
         NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
-        NSAttributedString.Key.strokeWidth: 3.0
-    ]
+        NSAttributedString.Key.strokeWidth: -3.0]
     
     
     var pickerController = UIImagePickerController()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+    
         photoLibraryButton.title = "Photo Library"
         cameraButton.title = "Camera"
-        
-        let newView = UIView()
-        newView.backgroundColor = UIColor.red
-        newView.sizeToFit()
-        view.addSubview(newView)
-        
-        newView.translatesAutoresizingMaskIntoConstraints = false
-        let horizontalConstraint = newView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        let verticalConstraint = newView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        let widthConstraint = newView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor)
-        let heightConstraint = newView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor)
-        NSLayoutConstraint.activate([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
+//
+//        let newView = UIView()
+//        newView.backgroundColor = UIColor.red
+//        newView.sizeToFit()
+//        view.addSubview(newView)
+//
+//        newView.translatesAutoresizingMaskIntoConstraints = false
+//        let horizontalConstraint = newView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+//        let verticalConstraint = newView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+//        let widthConstraint = newView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor)
+//        let heightConstraint = newView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor)
+//        NSLayoutConstraint.activate([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
     
         
         
         defininingTopText()
         definingBottomText()
-      
-  
+        resizeImageViewToImageSize(imagePickerView)
         
     }
 
     func resizeImageViewToImageSize(_ imageView:UIImageView) {
-        let widthRatio = imageView.bounds.size.width / imageView.image!.size.width
-        let heightRatio = imageView.bounds.size.height / imageView.image!.size.height
-        let scale = min(widthRatio, heightRatio)
-        let imageWidth = scale * imageView.image!.size.width
-        let imageHeight = scale * imageView.image!.size.height
-        print("\(imageWidth) - \(imageHeight)")
+//        let widthRatio = imageView.bounds.size.width / imageView.image!.size.width
+//        let heightRatio = imageView.bounds.size.height / imageView.image!.size.height
+//        let scale = min(widthRatio, heightRatio)
+//        let imageWidth = scale * imageView.image!.size.width
+//        let imageHeight = scale * imageView.image!.size.height
+//        print("\(imageWidth) - \(imageHeight)")
+//
+//        imageView.frame = CGRect(x: 0,
+//                                 y: 70,
+//                                 width: imageWidth,
+//                                 height: imageHeight)
+//        imageView.center.x = view.center.x
+        let screenSize = UIScreen.main.bounds
+        imageView.frame.size.width = screenSize.width
+        imageView.frame.size.height = screenSize.height
+        let leadingConstraints = imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0)
         
-        imageView.frame = CGRect(x: 0,
-                                 y: 70,
-                                 width: imageWidth,
-                                 height: imageHeight)
-        imageView.center.x = view.center.x
+        NSLayoutConstraint.activate([leadingConstraints])
     }
     
     //MARK: Defining text fields and their delegates
@@ -74,55 +82,84 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let topTextField = UITextField(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         
         topTextField.text = "This is the top text of your Meme"
-        topTextField.textColor = UIColor.black
-        topTextField.textColor?.setStroke()
+        topTextField.defaultTextAttributes = textAttributes
         topTextField.translatesAutoresizingMaskIntoConstraints = false
         topTextField.textAlignment = .center
-        topTextField.defaultTextAttributes = textAttributes
+        
         topTextField.sizeToFit()
         topTextField.delegate = self
         
         view.addSubview(topTextField)
         
         let horizontalConstraint = topTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        let verticalConstraint = topTextField.topAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor, constant: 50)
+        let verticalConstraint = topTextField.topAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor, constant: 10)
         NSLayoutConstraint.activate([horizontalConstraint, verticalConstraint])
     }
     
     func definingBottomText() {
         
-        let screenBounds = view.safeAreaLayoutGuide.layoutFrame
-        let bottomTextField = UITextField(frame: CGRect(x: screenBounds.width/2, y: screenBounds.height - 100, width: 100, height: 100))
+        let bottomTextField = UITextField(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         bottomTextField.defaultTextAttributes = textAttributes
         bottomTextField.text = "This is the bottom text"
         bottomTextField.textAlignment = .center
+        bottomTextField.delegate = self
         
-        bottomTextField.translatesAutoresizingMaskIntoConstraints = true
-        
-        
+        bottomTextField.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(bottomTextField)
         
         let horizontalContraint = bottomTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        let verticalConstraint = bottomTextField.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        let verticalConstraint = NSLayoutConstraint(item: bottomTextField, attribute: .bottom, relatedBy: .equal, toItem: uiToolBar, attribute: .topMargin, multiplier: 1, constant: -10)
         NSLayoutConstraint.activate([horizontalContraint, verticalConstraint])
         
     }
 
+    //MARK: TextFields delegates
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         return true
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        return true
+        return textField.resignFirstResponder()
     }
     
+    //MARK: Keyboard observers
+    
+    @objc func keyboardWillShow(_ notification: Notification){
+        view.frame.origin.y = -getKeyboardHeight(notification)
+    }
+    @objc func keyboardWillHide(_ notification: Notification){
+        view.frame.origin.y = UIEdgeInsets.zero.bottom
+    }
+    
+    func subscribeToKeyboardNotifications(){
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    func unsubscribeToKeyboardNotifications(){
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+    }
 
+    func getKeyboardHeight(_ notification: Notification) -> CGFloat {
+        let userInfo = notification.userInfo
+        let keyboardSize = userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue
+        return keyboardSize.cgRectValue.height
+    }
+    
     //MARK: Checking if device has camera built in
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
+        subscribeToKeyboardNotifications()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        unsubscribeToKeyboardNotifications()
     }
   
     //MARK: Buttons on UIBarButton
@@ -135,6 +172,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
     }
     
+    //MARK: 1 - ImagePicker
     
     @IBAction func pickImage(_ sender: Any) {
         pickerController.delegate = self
@@ -146,7 +184,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         dismiss(animated: true, completion: nil)
     }
     
-    //MARK: ImagePicker Controller
+    //MARK: 1.2 - ImagePicker Controller
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
