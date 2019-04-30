@@ -28,6 +28,10 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>This app will use your camera to generate Memes</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app will use your photos to generate Memes</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
