@@ -52,10 +52,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 //        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.sizeThatFits(size)
         imageView.contentMode = .scaleAspectFit
-//        imageView.sizeToFit()
-        let centerY = imageView.centerYAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.centerYAnchor, constant: 0)
+        let centerY = NSLayoutConstraint(item: imageView, attribute: .centerY, relatedBy: .equal, toItem: view.safeAreaLayoutGuide, attribute: .centerY, multiplier: 1, constant: 0)
         let centerX = imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0)
-        NSLayoutConstraint.activate([centerY, centerX])
+        let leadingConstraint = NSLayoutConstraint(item: imageView, attribute: .leading, relatedBy: .equal, toItem: view.safeAreaLayoutGuide, attribute: .leading, multiplier: 1, constant: 0)
+        let trailingConstraint = NSLayoutConstraint(item: imageView, attribute: .trailing, relatedBy: .equal, toItem: view.safeAreaLayoutGuide, attribute: .trailing, multiplier: 1, constant: 0)
+        NSLayoutConstraint.activate([centerY, centerX, leadingConstraint, trailingConstraint])
     }
 
     
@@ -81,7 +82,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 text.translatesAutoresizingMaskIntoConstraints = false
                 view.addSubview(text)
             }
-            let topVerticalConstraint = NSLayoutConstraint(item: topTextField, attribute: .top, relatedBy: .equal, toItem: imagePickerView, attribute: .top, multiplier: 1, constant: 0)
+            let topVerticalConstraint = NSLayoutConstraint(item: topTextField, attribute: .top, relatedBy: .equal, toItem: imagePickerView, attribute: .top, multiplier: 1, constant: 100)
             let topHorizontalConstraint = topTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor)
             let bottomHorizontalContraint = bottomTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor)
             let bottomVerticalConstraint = NSLayoutConstraint(item: bottomTextField, attribute: .bottom, relatedBy: .equal, toItem: imagePickerView, attribute: .bottom, multiplier: 1, constant: -10)
