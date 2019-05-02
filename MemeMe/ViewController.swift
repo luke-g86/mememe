@@ -11,16 +11,16 @@ import UIKit
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     
     
-    @IBOutlet weak var imagePickerView: UIImageView!
-    @IBOutlet weak var photoLibraryButton: UIBarButtonItem!
-    @IBOutlet weak var cameraButton: UIBarButtonItem!
-    @IBOutlet weak var uiToolBar: UIToolbar!
+//    @IBOutlet weak var imagePickerView: UIImageView!
     
-    
-    
+    var imagePickerView = UIImageView()
     var imageSelectedByUser: UIImage?
-   
+    var pickerController = UIImagePickerController()
+    let imageSelectedbyUser = UIImage()
+    let toolBar = UIToolbar()
+    let camButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.camera, target: nil, action: nil)
     
+    //MARK: Text attributes
     
     let textAttributes: [NSAttributedString.Key: Any] = [
         NSAttributedString.Key.strokeColor: UIColor.black,
@@ -28,44 +28,75 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
         NSAttributedString.Key.strokeWidth: -3.0]
     
-    
-    var pickerController = UIImagePickerController()
-    let imageSelectedbyUser = UIImage()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-     
+
         view.backgroundColor = UIColor.darkGray
-        photoLibraryButton.title = "Photo Library"
-        cameraButton.title = "Camera"
-        imageViewConstraints(imageView: imagePickerView)
         
-   
+        toolbarCreation()
+        imageViewSetup()
     
     }
 
+    //MARK: Checking if device has camera built in
     
-    func imageViewConstraints(imageView: UIImageView){
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        camButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
+        subscribeToKeyboardNotifications()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        unsubscribeToKeyboardNotifications()
+    }
+    
+    
+    func toolbarCreation() {
         
-        let size = CGSize(width: 400, height: 400)
+        toolBar.sizeToFit()
+        let photoLibraryButton = UIBarButtonItem(title: "Photo Library", style: UIBarButtonItem.Style.plain, target: self, action: #selector(pickImage(_:)))
+        let flexiSpace = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+        camButton.target = self
+        camButton.action = #selector(openCamera(_:))
         
-//        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.sizeThatFits(size)
+        var items = [UIBarButtonItem]()
+        items.append(camButton)
+        items.append(flexiSpace)
+        items.append(photoLibraryButton)
+        toolBar.setItems(items, animated: true)
+        
+        view.addSubview(toolBar)
+        toolBar.translatesAutoresizingMaskIntoConstraints = false
+        
+        let bottomConstraint = toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
+        let leadingConstaint = toolBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0)
+        let trailingConstraint = toolBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0)
+        
+        NSLayoutConstraint.activate([bottomConstraint, leadingConstaint, trailingConstraint])
+    }
+    
+    func imageViewSetup(){
+        
+        let imageView = imagePickerView
+        view.addSubview(imageView)
+        
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        let centerY = NSLayoutConstraint(item: imageView, attribute: .centerY, relatedBy: .equal, toItem: view.safeAreaLayoutGuide, attribute: .centerY, multiplier: 1, constant: 0)
-        let centerX = imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0)
-        let leadingConstraint = NSLayoutConstraint(item: imageView, attribute: .leading, relatedBy: .equal, toItem: view.safeAreaLayoutGuide, attribute: .leading, multiplier: 1, constant: 0)
-        let trailingConstraint = NSLayoutConstraint(item: imageView, attribute: .trailing, relatedBy: .equal, toItem: view.safeAreaLayoutGuide, attribute: .trailing, multiplier: 1, constant: 0)
-        NSLayoutConstraint.activate([centerY, centerX, leadingConstraint, trailingConstraint])
+        
+        let leadingConstraint = NSLayoutConstraint(item: imageView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1, constant: 0)
+        let trailingConstraint = NSLayoutConstraint(item: imageView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1, constant: 0)
+        let bottomConstraint = NSLayoutConstraint(item: imageView, attribute: .bottom, relatedBy: .equal, toItem: toolBar, attribute: .top, multiplier: 1, constant: 0)
+        let topConstraint = NSLayoutConstraint(item: imageView, attribute: .top, relatedBy: .equal, toItem: view.safeAreaLayoutGuide, attribute: .top, multiplier: 1, constant: 0)
+        NSLayoutConstraint.activate([leadingConstraint, trailingConstraint, bottomConstraint, topConstraint])
     }
-
     
     //MARK: Defining text fields and their delegates
     
     func setText() {
     
         if imageSelectedByUser != nil {
-
 
             let topTextField = UITextField(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
             let bottomTextField = UITextField(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
@@ -82,18 +113,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 text.translatesAutoresizingMaskIntoConstraints = false
                 view.addSubview(text)
             }
-            let topVerticalConstraint = NSLayoutConstraint(item: topTextField, attribute: .top, relatedBy: .equal, toItem: imagePickerView, attribute: .top, multiplier: 1, constant: 100)
+            let topVerticalConstraint = NSLayoutConstraint(item: topTextField, attribute: .bottom, relatedBy: .equal, toItem: imagePickerView, attribute: .top, multiplier: 1, constant: 200)
             let topHorizontalConstraint = topTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor)
             let bottomHorizontalContraint = bottomTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-            let bottomVerticalConstraint = NSLayoutConstraint(item: bottomTextField, attribute: .bottom, relatedBy: .equal, toItem: imagePickerView, attribute: .bottom, multiplier: 1, constant: -10)
+            let bottomVerticalConstraint = NSLayoutConstraint(item: bottomTextField, attribute: .top, relatedBy: .equal, toItem: imagePickerView, attribute: .bottom, multiplier: 1, constant: -200)
             
             NSLayoutConstraint.activate([topVerticalConstraint, topHorizontalConstraint, bottomVerticalConstraint, bottomHorizontalContraint])
         }
      
     }
     
-
-
     //MARK: TextFields delegates
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -129,18 +158,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return keyboardSize.cgRectValue.height
     }
     
-    //MARK: Checking if device has camera built in
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
-        subscribeToKeyboardNotifications()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        unsubscribeToKeyboardNotifications()
-    }
+
   
     //MARK: Buttons on UIBarButton
     
