@@ -97,18 +97,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         imageView.layer.borderWidth = 2
         imageView.clipsToBounds = true
     
-
         let centerX = imageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0)
         let centerY = NSLayoutConstraint(item: imageView, attribute: .centerY, relatedBy: .equal, toItem: view.safeAreaLayoutGuide, attribute: .centerY, multiplier: 1, constant: -toolBarHeight/2)
         NSLayoutConstraint.activate([centerX, centerY])
-
-        
-    }
-    
-    func aspectImage(_ newWidth: CGFloat, _ image: UIImage) -> CGSize {
-        
-        let newHeight = ceil(image.size.height * (newWidth / image.size.width))
-        return CGSize(width: newWidth, height: newHeight)
     }
     
     func updateConstraintsToImage(image: UIImage, imageView: UIImageView) {
@@ -130,20 +121,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
     }
 
-    //MARK: Scaling selected image to compact form
-    
-    func scaleImage(_ newWidth: CGFloat, _ image: UIImage) -> UIImage {
-        
-        let desiredSize = aspectImage(newWidth, image)
-        UIGraphicsBeginImageContext(desiredSize)
-        image.draw(in: CGRect(origin: CGPoint.zero, size: desiredSize))
-        
-        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        
-        return scaledImage
-    }
-    
     
     //MARK: Defining text fields and their delegates
     
@@ -186,7 +163,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             NSLayoutConstraint.activate([widthTopText, heightTopText, centerTopText, downToText, widthBottomText, heightBottomText, centerBottomText, upToText])
             
         }
-     
     }
     
     //MARK: TextFields delegates
