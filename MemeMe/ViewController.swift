@@ -45,6 +45,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
        
     }
 
+    
     //MARK: Checking if device has camera built in
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,13 +65,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         toolBar.sizeToFit()
         let photoLibraryButton = UIBarButtonItem(title: "Photo Library", style: UIBarButtonItem.Style.plain, target: self, action: #selector(pickImage(_:)))
         let flexiSpace = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+        
+    
         camButton.target = self
         camButton.action = #selector(openCamera(_:))
         
         var items = [UIBarButtonItem]()
+        items.append(photoLibraryButton)
+        items.append(flexiSpace)
         items.append(camButton)
         items.append(flexiSpace)
-        items.append(photoLibraryButton)
+        
+        
+        
         toolBar.setItems(items, animated: true)
         
         view.addSubview(toolBar)
@@ -201,7 +208,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
 
-  
     //MARK: Buttons on UIBarButton
     
     @IBAction func openCamera(_ sender: AnyObject) {
@@ -232,7 +238,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 imagePickerView.image = image
                 updateConstraintsToImage(image: image, imageView: imagePickerView)
                 dismiss(animated: true, completion: nil)
-                
                 
                 setText()
             }
