@@ -32,6 +32,8 @@
 	<string>This app will use your camera to generate Memes</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app will use your photos to generate Memes</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This app will save images to your Photo album</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

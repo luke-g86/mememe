@@ -18,11 +18,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var pickerController = UIImagePickerController()
     var imageSelectedbyUser = UIImage()
     let toolBar = UIToolbar()
+    let navBar = UINavigationBar()
     var toolBarHeight = CGFloat()
     let camButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.camera, target: nil, action: nil)
+    let shareButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.action, target: nil, action: nil)
     var imageViewHeightConstraint = NSLayoutConstraint()
     var imageViewWidthConstraint = NSLayoutConstraint()
-    
+    let topTextField = UITextView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+    let bottomTextField = UITextView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+
     
     //MARK: Text attributes
     
@@ -37,14 +41,29 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         super.viewDidLoad()
 
         view.backgroundColor = UIColor.darkGray
-        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
+        view.addSubview(navBar)
         toolbarCreation()
         imageViewSetup()
+        
+        
         
         print("toolbar height: \(toolBar.frame.size.height)")
        
     }
 
+    func save() {
+        let meme = Meme(topText: topTextField, bottomText: bottomTextField, originalImage: imagePickerView.image!, memedImage: generateMemedImage())
+    }
+
+    
+    @objc func shareTapped() {
+        let vc = UIActivityViewController(activityItems: [generateMemedImage()], applicationActivities: [])
+        vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+//        vc.completionWithItemsHandler = {save()}
+        present(vc, animated: true)
+        
+    }
     
     //MARK: Checking if device has camera built in
     
@@ -65,18 +84,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         toolBar.sizeToFit()
         let photoLibraryButton = UIBarButtonItem(title: "Photo Library", style: UIBarButtonItem.Style.plain, target: self, action: #selector(pickImage(_:)))
         let flexiSpace = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
-        
     
         camButton.target = self
         camButton.action = #selector(openCamera(_:))
+        shareButton.target = self
+        shareButton.action = #selector(shareTapped)
+        shareButton.isEnabled = false
         
         var items = [UIBarButtonItem]()
         items.append(photoLibraryButton)
         items.append(flexiSpace)
         items.append(camButton)
         items.append(flexiSpace)
-        
-        
+        items.append(shareButton)
         
         toolBar.setItems(items, animated: true)
         
@@ -126,8 +146,26 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         NSLayoutConstraint.activate([imageViewWidthConstraint, imageViewHeightConstraint])
 
+        shareButton.isEnabled = true
     }
 
+//    func save(_ memedImage: UIImage) {
+//        let meme = Meme(topText: topTextField, bottomText: bottomTextField, originalImage: imagePickerView.image!, memedImage: memedImage)
+//    }
+//
+    func generateMemedImage() -> UIImage {
+        
+        toolBar.isHidden = true
+        
+        UIGraphicsBeginImageContext(self.view.frame.size)
+        view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
+        let memedImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        toolBar.isHidden = false
+        
+        return memedImage
+    }
     
     //MARK: Defining text fields and their delegates
     
@@ -135,8 +173,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
         if imagePickerView.image != nil {
             
-            let topTextField = UITextView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
-            let bottomTextField = UITextView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+           
             let texts = [topTextField, bottomTextField]
 
         for text in texts {
@@ -210,7 +247,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
     //MARK: Buttons on UIBarButton
     
-    @IBAction func openCamera(_ sender: AnyObject) {
+    @objc func openCamera(_ sender: AnyObject) {
         pickerController.delegate = self
         pickerController.sourceType = .camera
         pickerController.allowsEditing = false
@@ -220,7 +257,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     //MARK: 1 - ImagePicker
     
-    @IBAction func pickImage(_ sender: Any) {
+    @objc func pickImage(_ sender: Any) {
         pickerController.delegate = self
         present(pickerController, animated: true, completion: nil)
         
