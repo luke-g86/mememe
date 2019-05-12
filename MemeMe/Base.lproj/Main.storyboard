@@ -6,12 +6,59 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="MemeMe" customModuleProvider="target" sceneMemberID="viewController"/>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="MemeMe" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Yqo-X4-n5T">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="B4P-vA-p5s">
+                                <rect key="frame" x="107" y="318" width="200" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="GZd-Ed-p9p" userLabel="Image View Width Constraint"/>
+                                    <constraint firstAttribute="height" constant="200" id="efj-vB-H0W" userLabel="Image View Height Constraint"/>
+                                </constraints>
+                            </imageView>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bob-2M-Ghr">
+                                <rect key="frame" x="200.5" y="338" width="13" height="48"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SRS-cK-bkU">
+                                <rect key="frame" x="200.5" y="450" width="13" height="48"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="SRS-cK-bkU" firstAttribute="centerX" secondItem="Yqo-X4-n5T" secondAttribute="centerX" id="M4N-6B-xl7"/>
+                            <constraint firstItem="B4P-vA-p5s" firstAttribute="bottom" secondItem="SRS-cK-bkU" secondAttribute="bottom" constant="20" id="M6t-pf-6KB"/>
+                            <constraint firstItem="B4P-vA-p5s" firstAttribute="centerY" secondItem="Yqo-X4-n5T" secondAttribute="centerY" constant="-30" id="VLX-rF-eQm"/>
+                            <constraint firstItem="bob-2M-Ghr" firstAttribute="centerX" secondItem="Yqo-X4-n5T" secondAttribute="centerX" id="fJw-Go-oFv"/>
+                            <constraint firstItem="B4P-vA-p5s" firstAttribute="centerX" secondItem="Yqo-X4-n5T" secondAttribute="centerX" id="n7g-Ou-8jT"/>
+                            <constraint firstItem="B4P-vA-p5s" firstAttribute="top" secondItem="bob-2M-Ghr" secondAttribute="top" constant="-20" id="nHr-Af-13x"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="lDB-JW-OjY"/>
+                    </view>
+                    <connections>
+                        <outlet property="bottomText" destination="SRS-cK-bkU" id="KuG-cN-VaQ"/>
+                        <outlet property="imageView" destination="B4P-vA-p5s" id="n2Z-y3-S3u"/>
+                        <outlet property="imageViewHeightConstraint" destination="efj-vB-H0W" id="f34-jM-Wzx"/>
+                        <outlet property="imageViewWidthConstraint" destination="GZd-Ed-p9p" id="FYo-p2-KPB"/>
+                        <outlet property="topText" destination="bob-2M-Ghr" id="IFl-Rw-ssr"/>
+                    </connections>
+                </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="47.826086956521742" y="20.758928571428569"/>

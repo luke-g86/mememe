@@ -11,13 +11,13 @@ import UIKit
 
 struct Meme {
     
-    let topText: UITextView
-    let bottomText: UITextView
+    let topText: UITextField
+    let bottomText: UITextField
     let originalImage: UIImage
     let memedImage: UIImage
     
 
-    init(topText: UITextView, bottomText: UITextView, originalImage: UIImage, memedImage: UIImage) {
+    init(topText: UITextField, bottomText: UITextField, originalImage: UIImage, memedImage: UIImage) {
         self.topText = topText
         self.bottomText = bottomText
         self.originalImage = originalImage
