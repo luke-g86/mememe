@@ -39,6 +39,40 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         toolbarCreation()
     }
     
+    //MARK: Creating toolbar with action buttons
+    
+    func toolbarCreation() {
+        
+        toolBar.sizeToFit()
+        let photoLibraryButton = UIBarButtonItem(title: "Photo Library", style: UIBarButtonItem.Style.plain, target: self, action: #selector(pickImage(_:)))
+        let flexiSpace = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+        
+        camButton.target = self
+        camButton.action = #selector(openCamera(_:))
+        shareButton.target = self
+        shareButton.action = #selector(shareTapped)
+        shareButton.isEnabled = false
+        
+        var items = [UIBarButtonItem]()
+        items.append(photoLibraryButton)
+        items.append(flexiSpace)
+        items.append(camButton)
+        items.append(flexiSpace)
+        items.append(shareButton)
+        
+        toolBar.setItems(items, animated: true)
+        
+        view.addSubview(toolBar)
+        toolBar.translatesAutoresizingMaskIntoConstraints = false
+        toolBarHeight = toolBar.frame.size.height
+        
+        let bottomConstraint = toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
+        let leadingConstaint = toolBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0)
+        let trailingConstraint = toolBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0)
+        
+        NSLayoutConstraint.activate([bottomConstraint, leadingConstaint, trailingConstraint])
+    }
+    
     func save() {
         
         let meme = Meme(topText: topText, bottomText: bottomText, originalImage: imageView.image!, memedImage: generateMemedImage())
@@ -47,7 +81,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @objc func shareTapped() {
         let vc = UIActivityViewController(activityItems: [generateMemedImage()], applicationActivities: [])
         vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
-//        vc.completionWithItemsHandler = save()
+        vc.completionWithItemsHandler = {(activity, success, items, error) in
+                if (success)
+                {
+                    self.save()
+                }
+            }
         present(vc, animated: true)
         
     }
@@ -72,41 +111,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         DispatchQueue.main.async {
             self.updateConstraintsToImage(image: selectedImage)
         }
-    }
-    
-    //MARK: Creating toolbar with action buttons
-    
-    func toolbarCreation() {
-        
-        toolBar.sizeToFit()
-        let photoLibraryButton = UIBarButtonItem(title: "Photo Library", style: UIBarButtonItem.Style.plain, target: self, action: #selector(pickImage(_:)))
-        let flexiSpace = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
-
-        camButton.target = self
-        camButton.action = #selector(openCamera(_:))
-        shareButton.target = self
-        shareButton.action = #selector(shareTapped)
-        shareButton.isEnabled = false
-        
-        var items = [UIBarButtonItem]()
-        items.append(photoLibraryButton)
-        items.append(flexiSpace)
-        items.append(camButton)
-        items.append(flexiSpace)
-        items.append(shareButton)
-        
-        toolBar.setItems(items, animated: true)
-        
-        view.addSubview(toolBar)
-        toolBar.translatesAutoresizingMaskIntoConstraints = false
-        toolBarHeight = toolBar.frame.size.height
-        
-        let bottomConstraint = toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
-        let leadingConstaint = toolBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0)
-        let trailingConstraint = toolBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0)
-
-        NSLayoutConstraint.activate([bottomConstraint, leadingConstaint, trailingConstraint])
-        
     }
     
     //MARK: Updating constraints for portrait / landscape images
@@ -136,14 +140,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func generateMemedImage() -> UIImage {
         
         toolBar.isHidden = true
-        
+     
         UIGraphicsBeginImageContext(self.view.frame.size)
         view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
         let memedImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         
         toolBar.isHidden = false
-        
+        self.view.backgroundColor = UIColor.darkGray
         return memedImage
     }
 
@@ -164,11 +168,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             txt.typingAttributes = textAttributes
             txt.textAlignment = .center
             txt.autoresizingMask = .flexibleHeight
- 
             txt.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(txt)
         }
-        
     }
     
     //MARK: TextFields delegates
@@ -280,4 +282,3 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
 }
-
