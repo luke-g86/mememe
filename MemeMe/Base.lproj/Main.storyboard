@@ -26,14 +26,14 @@
                                 </constraints>
                             </imageView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bob-2M-Ghr">
-                                <rect key="frame" x="200.5" y="338" width="13" height="48"/>
+                                <rect key="frame" x="10" y="338" width="394" height="48"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SRS-cK-bkU">
-                                <rect key="frame" x="200.5" y="450" width="13" height="48"/>
+                                <rect key="frame" x="10" y="450" width="394" height="48"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
@@ -42,10 +42,14 @@
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="lDB-JW-OjY" firstAttribute="trailing" secondItem="SRS-cK-bkU" secondAttribute="trailing" constant="10" id="JFH-1y-daB"/>
                             <constraint firstItem="SRS-cK-bkU" firstAttribute="centerX" secondItem="Yqo-X4-n5T" secondAttribute="centerX" id="M4N-6B-xl7"/>
                             <constraint firstItem="B4P-vA-p5s" firstAttribute="bottom" secondItem="SRS-cK-bkU" secondAttribute="bottom" constant="20" id="M6t-pf-6KB"/>
                             <constraint firstItem="B4P-vA-p5s" firstAttribute="centerY" secondItem="Yqo-X4-n5T" secondAttribute="centerY" constant="-30" id="VLX-rF-eQm"/>
+                            <constraint firstItem="bob-2M-Ghr" firstAttribute="leading" secondItem="lDB-JW-OjY" secondAttribute="leading" constant="10" id="fFK-cF-IZ0"/>
                             <constraint firstItem="bob-2M-Ghr" firstAttribute="centerX" secondItem="Yqo-X4-n5T" secondAttribute="centerX" id="fJw-Go-oFv"/>
+                            <constraint firstItem="SRS-cK-bkU" firstAttribute="leading" secondItem="lDB-JW-OjY" secondAttribute="leading" constant="10" id="h7O-Lz-sh2"/>
+                            <constraint firstItem="lDB-JW-OjY" firstAttribute="trailing" secondItem="bob-2M-Ghr" secondAttribute="trailing" constant="10" id="jCr-w4-iGs"/>
                             <constraint firstItem="B4P-vA-p5s" firstAttribute="centerX" secondItem="Yqo-X4-n5T" secondAttribute="centerX" id="n7g-Ou-8jT"/>
                             <constraint firstItem="B4P-vA-p5s" firstAttribute="top" secondItem="bob-2M-Ghr" secondAttribute="top" constant="-20" id="nHr-Af-13x"/>
                         </constraints>

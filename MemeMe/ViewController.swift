@@ -155,8 +155,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func setText() {
         
-        topText.text = "Top text"
-        bottomText.text = "Bottom text"
+        topText.text = "TOP TEXT"
+        bottomText.text = "BOTTOM TEXT"
         
         // Delegate which registers touch on the bottom field to use it further for screen positioning
         bottomText.addTarget(self, action: #selector(textFieldTouched(_:)), for: .touchDown)
@@ -164,9 +164,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let texts: [UITextField] = [topText, bottomText]
         
         for txt in texts {
+            txt.delegate = self
+            txt.defaultTextAttributes = textAttributes
             txt.backgroundColor = UIColor.clear
-            txt.typingAttributes = textAttributes
+            txt.autocapitalizationType = .allCharacters
             txt.textAlignment = .center
+            txt.adjustsFontSizeToFitWidth = true
+            txt.minimumFontSize = 7
             txt.autoresizingMask = .flexibleHeight
             txt.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(txt)
