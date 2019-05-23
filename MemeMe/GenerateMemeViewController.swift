@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  GenerateMemeViewController.swift
 //  MemeMe
 //
 //  Created by Lukasz on 11/04/2019.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate {
+class GenerateMemeViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate {
     
 
     @IBOutlet weak var topText: UITextField!
@@ -16,6 +16,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var saveButton: UIBarButtonItem!
     
     let pickerController = UIImagePickerController()
     var imageSelectedByUser: UIImage?
@@ -24,7 +25,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     let camButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.camera, target: nil, action: nil)
     let shareButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.action, target: nil, action: nil)
     var bottomTextTouch = false
+    var rootView = RootViewWithMemes()
    
+    
     //MARK: Text attributes
     
     let textAttributes: [NSAttributedString.Key: Any] = [
@@ -37,6 +40,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         super.viewDidLoad()
         view.backgroundColor = UIColor.darkGray
         toolbarCreation()
+        saveButton.isEnabled = false
     }
     
     //MARK: Creating toolbar with action buttons
@@ -73,9 +77,30 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         NSLayoutConstraint.activate([bottomConstraint, leadingConstaint, trailingConstraint])
     }
     
+    @IBAction func saveTapped(_ sender: AnyObject){
+        save()
+    }
+    
     func save() {
+       
+        let usersMeme = Meme(topText: topText, bottomText: bottomText, originalImage: imageView.image!, memedImage: generateMemedImage())
         
-        let meme = Meme(topText: topText, bottomText: bottomText, originalImage: imageView.image!, memedImage: generateMemedImage())
+        let memeToBeSaved = MemeData(context: PersistanceService.context)
+        memeToBeSaved.topText = usersMeme.topText.text
+        memeToBeSaved.bottomText = usersMeme.bottomText.text
+        let data = usersMeme.originalImage.jpegData(compressionQuality: 0)! as NSData
+        memeToBeSaved.originalImage = data
+        memeToBeSaved.memedImage = usersMeme.memedImage.jpegData(compressionQuality: 0)! as NSData
+        usersMeme.createdMeme.arrayOfMemes.append(memeToBeSaved)
+        PersistanceService.saveContext()
+        
+        NotificationCenter.default.post(name: NSNotification.Name("tableReload"), object: nil)
+        
+        goBack()
+    }
+    
+    func goBack(){
+        _ = navigationController?.popToRootViewController(animated: true)
     }
 
     @objc func shareTapped() {
@@ -133,6 +158,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         NSLayoutConstraint.activate([imageViewWidthConstraint, imageViewHeightConstraint])
         
         shareButton.isEnabled = true
+        saveButton.isEnabled = true
     }
 
     //MARK: Creating graphics
