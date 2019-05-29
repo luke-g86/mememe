@@ -15,8 +15,9 @@ struct Meme {
     let bottomText: UITextField
     let originalImage: UIImage
     let memedImage: UIImage
-    var createdMeme = RootViewWithMemes()
+    var memesArray = MemeData.arrayOfMemes
     
+    static var memeTable = [MemeData]()
 
     init(topText: UITextField, bottomText: UITextField, originalImage: UIImage, memedImage: UIImage) {
         self.topText = topText

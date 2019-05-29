@@ -13,4 +13,6 @@ import CoreData
 @objc(MemeData)
 public class MemeData: NSManagedObject {
 
+    static var arrayOfMemes = [MemeData]()
+    
 }

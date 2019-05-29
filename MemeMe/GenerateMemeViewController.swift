@@ -19,15 +19,16 @@ class GenerateMemeViewController: UIViewController, UIImagePickerControllerDeleg
     @IBOutlet weak var saveButton: UIBarButtonItem!
     
     let pickerController = UIImagePickerController()
-    var imageSelectedByUser: UIImage?
+    var memedImage: UIImage?
     let toolBar = UIToolbar()
     var toolBarHeight = CGFloat()
     let camButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.camera, target: nil, action: nil)
     let shareButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.action, target: nil, action: nil)
     var bottomTextTouch = false
-    var rootView = RootViewWithMemes()
+//    var rootView = MemeTableViewController()
+    var background = UIColor.darkGray
    
-    
+
     //MARK: Text attributes
     
     let textAttributes: [NSAttributedString.Key: Any] = [
@@ -38,7 +39,13 @@ class GenerateMemeViewController: UIViewController, UIImagePickerControllerDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.darkGray
+        
+        if let imageToDisplay = memedImage {
+            imageView.image = imageToDisplay
+            updateConstraintsToImage(image: imageToDisplay)
+        }
+
+        view.backgroundColor = background
         toolbarCreation()
         saveButton.isEnabled = false
     }
@@ -83,7 +90,7 @@ class GenerateMemeViewController: UIViewController, UIImagePickerControllerDeleg
     
     func save() {
        
-        let usersMeme = Meme(topText: topText, bottomText: bottomText, originalImage: imageView.image!, memedImage: generateMemedImage())
+        var usersMeme = Meme(topText: topText, bottomText: bottomText, originalImage: imageView.image!, memedImage: generateMemedImage())
         
         let memeToBeSaved = MemeData(context: PersistanceService.context)
         memeToBeSaved.topText = usersMeme.topText.text
@@ -91,7 +98,7 @@ class GenerateMemeViewController: UIViewController, UIImagePickerControllerDeleg
         let data = usersMeme.originalImage.jpegData(compressionQuality: 0)! as NSData
         memeToBeSaved.originalImage = data
         memeToBeSaved.memedImage = usersMeme.memedImage.jpegData(compressionQuality: 0)! as NSData
-        usersMeme.createdMeme.arrayOfMemes.append(memeToBeSaved)
+        usersMeme.memesArray.append(memeToBeSaved)
         PersistanceService.saveContext()
         
         NotificationCenter.default.post(name: NSNotification.Name("tableReload"), object: nil)
@@ -122,6 +129,7 @@ class GenerateMemeViewController: UIViewController, UIImagePickerControllerDeleg
         super.viewWillAppear(animated)
         camButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
         subscribeToKeyboardNotifications()
+        self.tabBarController?.tabBar.isHidden = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -166,28 +174,38 @@ class GenerateMemeViewController: UIViewController, UIImagePickerControllerDeleg
     func generateMemedImage() -> UIImage {
         
         toolBar.isHidden = true
-     
-        UIGraphicsBeginImageContext(self.view.frame.size)
-        view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
+        
+        UIGraphicsBeginImageContextWithOptions(imageView.frame.size, false, 0.0)
+        let screenShotArea = CGRect(x: -imageView.frame.minX, y: -imageView.frame.minY, width: view.bounds.size.width, height: view.bounds.size.height)
+        view.drawHierarchy(in: screenShotArea, afterScreenUpdates: true)
         let memedImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
+        UIGraphicsBeginImageContextWithOptions(view.frame.size, false, UIScreen.main.scale)
+//        UIGraphicsBeginImageContext(self.view.frame.size)
+//        view.drawHierarchy(in: self.imageView.bounds, afterScreenUpdates: true)
+//        let memedImage = UIGraphicsGetImageFromCurrentImageContext()!
+//        UIGraphicsEndImageContext()
         
         toolBar.isHidden = false
-        self.view.backgroundColor = UIColor.darkGray
+
         return memedImage
     }
 
     //MARK: Defining text fields and their delegates
-    
-    func setText() {
-        
-        topText.text = "TOP TEXT"
-        bottomText.text = "BOTTOM TEXT"
+    // If there's already set and saved text it might be used
+    func setText(_ topText: String? = nil, _ bottomText: String? = nil) {
+        // Setting default values for text
+        if ((topText != nil) && (bottomText != nil)){
+            self.topText.text = topText
+            self.bottomText.text = bottomText
+        }
+        self.topText.text = "TOP TEXT"
+        self.bottomText.text = "BOTTOM TEXT"
         
         // Delegate which registers touch on the bottom field to use it further for screen positioning
-        bottomText.addTarget(self, action: #selector(textFieldTouched(_:)), for: .touchDown)
+        self.bottomText.addTarget(self, action: #selector(textFieldTouched(_:)), for: .touchDown)
         
-        let texts: [UITextField] = [topText, bottomText]
+        let texts: [UITextField] = [self.topText, self.bottomText]
         
         for txt in texts {
             txt.delegate = self
@@ -302,6 +320,7 @@ class GenerateMemeViewController: UIViewController, UIImagePickerControllerDeleg
                 imageView.clipsToBounds = true
                 updateConstraintsToImage(image: image)
                 setText()
+                
             }
         }
         dismiss(animated: true, completion: nil)

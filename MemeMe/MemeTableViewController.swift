@@ -10,19 +10,25 @@ import Foundation
 import UIKit
 import CoreData
 
-class RootViewWithMemes: UIViewController, UITableViewDataSource {
+class MemeTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    var arrayOfMemes = [MemeData]()
+//    static var arrayOfMemes = [MemeData]()
     
+    let refreshControl = UIRefreshControl()
     
     @IBOutlet weak var tableView: UITableView!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
         loadList()
         
         NotificationCenter.default.addObserver(self, selector: #selector(loadList), name: NSNotification.Name(rawValue: "reloadTable"), object: nil)
+        
+       
+        tableView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(loadList), for: .valueChanged)
+        
     }
     
     @objc func loadList() {
@@ -30,19 +36,22 @@ class RootViewWithMemes: UIViewController, UITableViewDataSource {
         let fetchRequest: NSFetchRequest<MemeData> = MemeData.fetchRequest()
         do {
             let generatedMemes = try PersistanceService.context.fetch(fetchRequest)
-            self.arrayOfMemes = generatedMemes
+            MemeData.arrayOfMemes = generatedMemes
             self.tableView.reloadData()
         } catch {
             let ac = UIAlertController(title: title, message: "Something went wrong", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "Error", style: .default, handler: nil))
             present(ac, animated: true)
         }
+        self.refreshControl.endRefreshing()
+     
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
-             self.tableView.reloadData()
+             loadList()
+         self.tabBarController?.tabBar.isHidden = false
     }
-    
     
     @IBAction func addButtonTapped(_ sender: AnyObject) {
         
@@ -58,17 +67,29 @@ class RootViewWithMemes: UIViewController, UITableViewDataSource {
     
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arrayOfMemes.count
+        return MemeData.arrayOfMemes.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
-        cell.textLabel?.text = arrayOfMemes[indexPath.row].topText
+        cell.textLabel?.text = MemeData.arrayOfMemes[indexPath.row].topText
         cell.detailTextLabel?.text = "test"
-        cell.imageView?.image = UIImage(data: arrayOfMemes[indexPath.row].originalImage as! Data)
+        cell.imageView?.image = UIImage(data: MemeData.arrayOfMemes[indexPath.row].originalImage! as Data)
         return cell
     }
     
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let previewVC = self.storyboard?.instantiateViewController(withIdentifier: "PreviewViewController") as! PreviewViewController
+//        previewVC.memedImage = UIImage(data: self.arrayOfMemes[(indexPath as NSIndexPath).row].memedImage as! Data)
+//        self.navigationController?.pushViewController(previewVC, animated: true)
+//    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let gmvc = self.storyboard?.instantiateViewController(withIdentifier: "GenerateMemeView") as! GenerateMemeViewController
+        gmvc.memedImage = UIImage(data: MemeData.arrayOfMemes[(indexPath as NSIndexPath).row].memedImage! as Data)
+        gmvc.background = UIColor.white
+        self.navigationController?.pushViewController(gmvc, animated: true)
+    }
  
     
 //    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
