@@ -22,12 +22,22 @@ class MemeTableViewController: UIViewController, UITableViewDataSource, UITableV
         super.viewDidLoad()
         
         loadList()
+        setTableView()
+        
         
         NotificationCenter.default.addObserver(self, selector: #selector(loadList), name: NSNotification.Name(rawValue: "reloadTable"), object: nil)
         
-       
+    }
+    
+    func setTableView() {
+        self.tableView.register(TableViewCell.self, forCellReuseIdentifier: "MemeTebleView")
         tableView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(loadList), for: .valueChanged)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.backgroundColor = UIColor.green
+        tableView.separatorColor = UIColor.clear
+//        self.view.addSubview(tableView)
         
     }
     
@@ -45,12 +55,13 @@ class MemeTableViewController: UIViewController, UITableViewDataSource, UITableV
         }
         self.refreshControl.endRefreshing()
      
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
              loadList()
-         self.tabBarController?.tabBar.isHidden = false
+        self.tabBarController?.tabBar.isHidden = false
+        self.tableView.register(TableViewCell.self, forCellReuseIdentifier: "MemeTebleView")
+        
     }
     
     @IBAction func addButtonTapped(_ sender: AnyObject) {
@@ -71,18 +82,14 @@ class MemeTableViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MemeTebleView") as! TableViewCell
         cell.textLabel?.text = MemeData.arrayOfMemes[indexPath.row].topText
         cell.detailTextLabel?.text = "test"
-        cell.imageView?.image = UIImage(data: MemeData.arrayOfMemes[indexPath.row].originalImage! as Data)
+        cell.mainImageView.contentMode = .scaleAspectFill
+        cell.mainImageView.image = UIImage(data: MemeData.arrayOfMemes[indexPath.row].memedImage! as Data)
         return cell
+
     }
-    
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let previewVC = self.storyboard?.instantiateViewController(withIdentifier: "PreviewViewController") as! PreviewViewController
-//        previewVC.memedImage = UIImage(data: self.arrayOfMemes[(indexPath as NSIndexPath).row].memedImage as! Data)
-//        self.navigationController?.pushViewController(previewVC, animated: true)
-//    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let gmvc = self.storyboard?.instantiateViewController(withIdentifier: "GenerateMemeView") as! GenerateMemeViewController
@@ -91,6 +98,9 @@ class MemeTableViewController: UIViewController, UITableViewDataSource, UITableV
         self.navigationController?.pushViewController(gmvc, animated: true)
     }
  
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 110
+    }
     
 //    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 //        let controller = segue.destination as! GenerateMemeViewController

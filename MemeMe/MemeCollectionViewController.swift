@@ -17,9 +17,10 @@ class MemeCollectionViewController: UIViewController, UICollectionViewDelegate, 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.tabBarController?.tabBar.isHidden = false
-        let width = (view.frame.size.width - 20) / 3
+        let width = (view.frame.size.width - 25) / 3
         let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         layout.itemSize = CGSize(width: width, height: width)
+        
         self.collectionView?.reloadData()
     }
     
@@ -35,11 +36,12 @@ class MemeCollectionViewController: UIViewController, UICollectionViewDelegate, 
         let img = UIImage(data: MemeData.arrayOfMemes[(indexPath as NSIndexPath).row].memedImage! as Data)
         cell.memeCellImageView.image = img
     
+        cell.contentView.layer.masksToBounds = true
         return cell
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSize(width: 50, height: 414)
+        return CGSize(width: 50, height: 50)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath:IndexPath) {

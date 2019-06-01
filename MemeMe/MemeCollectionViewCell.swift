@@ -14,4 +14,12 @@ class MemeCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var memeCellImageView: UIImageView!
 
+
+//    override init(frame: CGRect) {
+//        self.frame(CGRect.init(x: 0, y: 0, width: 50, height: 50))
+//    }
+//
+//    required init?(coder aDecoder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
 }
