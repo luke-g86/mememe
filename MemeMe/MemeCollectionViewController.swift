@@ -46,11 +46,18 @@ class MemeCollectionViewController: UIViewController, UICollectionViewDelegate, 
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath:IndexPath) {
         
-        let gmvc = self.storyboard?.instantiateViewController(withIdentifier: "GenerateMemeView") as! GenerateMemeViewController
-        gmvc.memedImage = UIImage(data: MemeData.arrayOfMemes[(indexPath as NSIndexPath).row].memedImage as! Data)
-        gmvc.background = UIColor.white
-        self.navigationController?.pushViewController(gmvc, animated: true)
+        let pc = self.storyboard?.instantiateViewController(withIdentifier: "PreviewController") as! PreviewViewController
+        pc.imageToDisplay = UIImage(data: MemeData.arrayOfMemes[(indexPath as NSIndexPath).row].memedImage as! Data)
+        pc.view.backgroundColor = UIColor.white
+        self.navigationController?.pushViewController(pc, animated: true)
         
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        cell.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        UIView.animate(withDuration: 0.4) {
+            cell.transform = CGAffineTransform.identity
+        }
     }
 
 }
