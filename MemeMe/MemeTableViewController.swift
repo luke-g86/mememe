@@ -69,11 +69,19 @@ class MemeTableViewController: UIViewController {
         self.refreshControl.endRefreshing()
     }
     
-    @objc func deleteData(_ indexPath: IndexPath) {
+    @objc func deleteData() {
         
-        PersistanceService.context.delete(MemeData.arrayOfMemes[indexPath.row])
-        PersistanceService.saveContext()
-        tableView.reloadData()
+        let fetchRequest: NSFetchRequest<MemeData> = MemeData.fetchRequest()
+        do {
+            let arrayOfMemes = try PersistanceService.context.fetch(fetchRequest)
+            PersistanceService.context.delete(arrayOfMemes[1])
+            PersistanceService.saveContext()
+            self.tableView.reloadData()
+        } catch {
+            let ac = UIAlertController(title: title, message: "Something went wrong", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Error", style: .default, handler: nil))
+            present(ac, animated: true)
+        }
     }
 
     
@@ -84,7 +92,6 @@ class MemeTableViewController: UIViewController {
 
     
     @IBAction func addButtonTapped(_ sender: AnyObject) {
-        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "GenerateMemeView") as! GenerateMemeViewController
         self.navigationController?.pushViewController(controller, animated: true)
@@ -133,7 +140,7 @@ extension MemeTableViewController: UITableViewDataSource, UITableViewDelegate, U
         
         let animationHandler: ((UIViewControllerTransitionCoordinatorContext) -> Void) = { [weak self] (context) in
             // This block will be called several times during rotation,
-            // so if you want your tableView change more smooth reload it here too.
+            // so the tableView change more smoothly
             self?.tableView.reloadData()
             self?.tableView.frame = self!.view.frame
         }
@@ -152,10 +159,13 @@ extension MemeTableViewController: UITableViewDataSource, UITableViewDelegate, U
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 
         if (editingStyle == .delete) {
-            tableView.deleteRows(at: [indexPath], with: .fade)
-
             
-            PersistanceService.context.delete(MemeData.arrayOfMemes[indexPath.row] as NSManagedObject)
+            //MARK: Deleting data from database
+            
+            let commit = MemeData.arrayOfMemes[indexPath.row]
+            PersistanceService.context.delete(commit)
+            MemeData.arrayOfMemes.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
             PersistanceService.saveContext()
             tableView.reloadData()
         }
