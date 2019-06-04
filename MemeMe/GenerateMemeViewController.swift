@@ -25,7 +25,6 @@ class GenerateMemeViewController: UIViewController, UIImagePickerControllerDeleg
     let camButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.camera, target: nil, action: nil)
     let shareButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.action, target: nil, action: nil)
     var bottomTextTouch = false
-//    var rootView = MemeTableViewController()
     var background = UIColor.darkGray
    
 
@@ -181,11 +180,6 @@ class GenerateMemeViewController: UIViewController, UIImagePickerControllerDeleg
         let memedImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         UIGraphicsBeginImageContextWithOptions(view.frame.size, false, UIScreen.main.scale)
-//        UIGraphicsBeginImageContext(self.view.frame.size)
-//        view.drawHierarchy(in: self.imageView.bounds, afterScreenUpdates: true)
-//        let memedImage = UIGraphicsGetImageFromCurrentImageContext()!
-//        UIGraphicsEndImageContext()
-        
         toolBar.isHidden = false
 
         return memedImage

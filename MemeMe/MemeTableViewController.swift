@@ -12,7 +12,8 @@ import CoreData
 
 class MemeTableViewController: UIViewController {
     
-    //    static var arrayOfMemes = [MemeData]()
+    
+    
     
     let refreshControl = UIRefreshControl()
     let tableView = UITableView()
@@ -24,7 +25,7 @@ class MemeTableViewController: UIViewController {
         
         setTableView()
         loadList()
-//        self.title = "MemeMe"
+        self.navigationItem.title = "MemeMe"
     
         NotificationCenter.default.addObserver(self, selector: #selector(loadList), name: NSNotification.Name(rawValue: "reloadTable"), object: nil)
         
@@ -37,12 +38,7 @@ class MemeTableViewController: UIViewController {
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        
-//        let lead = tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0)
-//        let bottom = tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
-//        let trail = tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0)
-//
-//        NSLayoutConstraint.activate([top, lead, bottom, trail])
+        tableView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
     }
     
     func setTableView() {
@@ -71,8 +67,15 @@ class MemeTableViewController: UIViewController {
             present(ac, animated: true)
         }
         self.refreshControl.endRefreshing()
-        
     }
+    
+    @objc func deleteData(_ indexPath: IndexPath) {
+        
+        PersistanceService.context.delete(MemeData.arrayOfMemes[indexPath.row])
+        PersistanceService.saveContext()
+        tableView.reloadData()
+    }
+
     
     override func viewWillAppear(_ animated: Bool) {
         loadList()
@@ -92,14 +95,14 @@ class MemeTableViewController: UIViewController {
 extension MemeTableViewController: UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("Items \(MemeData.arrayOfMemes.count)")
         return MemeData.arrayOfMemes.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MemeTebleView") as! TableViewCell
-        cell.topLabel.text = MemeData.arrayOfMemes[indexPath.row].topText
-        cell.bottomLabel.text = "test"
-//        cell.mainImageView.contentMode = .scaleAspectFill
+        cell.topLabel.text = MemeData.arrayOfMemes[indexPath.row].topText?.capitalized
+        cell.bottomLabel.text = MemeData.arrayOfMemes[indexPath.row].bottomText?.capitalized
         cell.mainImageView.image = UIImage(data: MemeData.arrayOfMemes[indexPath.row].memedImage! as Data)
         return cell
     }
@@ -132,16 +135,31 @@ extension MemeTableViewController: UITableViewDataSource, UITableViewDelegate, U
             // This block will be called several times during rotation,
             // so if you want your tableView change more smooth reload it here too.
             self?.tableView.reloadData()
-       
+            self?.tableView.frame = self!.view.frame
         }
         
         let completionHandler: ((UIViewControllerTransitionCoordinatorContext) -> Void) = { [weak self] (context) in
             // This block will be called when rotation will be completed
             self?.tableView.reloadData()
         }
-        
         coordinator.animate(alongsideTransition: animationHandler, completion: completionHandler)
-        
     }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 
+        if (editingStyle == .delete) {
+            tableView.deleteRows(at: [indexPath], with: .fade)
+
+            
+            PersistanceService.context.delete(MemeData.arrayOfMemes[indexPath.row] as NSManagedObject)
+            PersistanceService.saveContext()
+            tableView.reloadData()
+        }
+    }
 }
+
+

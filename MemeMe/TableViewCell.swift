@@ -10,9 +10,9 @@ import UIKit
 
 class TableViewCell: UITableViewCell {
 
-  
+  // objects' parameters created with closures
     lazy var cellView: UIView = {
-        let view = UIView(frame: CGRect(x: 10, y: 6, width: UIScreen.main.bounds.width - 20, height: 110))
+        let view = UIView()
         view.backgroundColor = UIColor.white
         view.translatesAutoresizingMaskIntoConstraints = false
         view.clipsToBounds = true
@@ -20,28 +20,29 @@ class TableViewCell: UITableViewCell {
     }()
     
     lazy var mainImageView: UIImageView = {
-        let imageView = UIImageView(frame: CGRect(x: 10, y: 6, width: 110, height: 100))
+        let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = 20
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.clipsToBounds = true
         return imageView
     }()
     
     lazy var topLabel: UILabel = {
-        let label = UILabel(frame: CGRect(x: 160, y: 15, width: cellView.frame.width - 116, height: 30))
+        let label = UILabel()
         label.textAlignment = .left
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.clipsToBounds = true
         return label
     }()
     
     lazy var bottomLabel: UILabel = {
-        let label = UILabel(frame: CGRect(x: 160, y: 40, width: cellView.frame.width - 116, height: 30))
+        let label = UILabel() //frame: CGRect(x: 160, y: 40, width: cellView.frame.width - 116, height: 30))
         label.textAlignment = .left
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.clipsToBounds = true
         return label
     }()
     
@@ -50,22 +51,7 @@ class TableViewCell: UITableViewCell {
         contentView.backgroundColor = UIColor.clear
         backgroundColor = UIColor.clear
         cellView.layer.cornerRadius = 5
-//        cellView.clipsToBounds = true
         mainImageView.layer.cornerRadius = 0
-        mainImageView.clipsToBounds = true
-
-//        let top = NSLayoutConstraint.init(item: cellView, attribute: .top, relatedBy: .equal, toItem: contentView.safeAreaLayoutGuide, attribute: .top, multiplier: 0, constant: 1)
-//        let bottom = NSLayoutConstraint.init(item: cellView, attribute: .bottom, relatedBy: .equal, toItem: contentView.safeAreaLayoutGuide, attribute: .bottom, multiplier: 0, constant: 1)
-//        let leading = NSLayoutConstraint.init(item: cellView, attribute: .leading, relatedBy: .equal, toItem: contentView.safeAreaLayoutGuide, attribute: .leading, multiplier: 0, constant: 1)
-//        let trailing = NSLayoutConstraint.init(item: cellView, attribute: .trailing, relatedBy: .equal, toItem: contentView.safeAreaLayoutGuide, attribute: .trailing, multiplier: 0, constant: 1)
-//
-//        NSLayoutConstraint.activate([top, bottom, leading, trailing])
-        
-//        cellView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
-//        cellView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
-//        cellView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
-//        cellView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0).isActive = true
-    
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -76,7 +62,7 @@ class TableViewCell: UITableViewCell {
         cellView.addSubview(topLabel)
         cellView.addSubview(bottomLabel)
 
-//        addSubViewsAndlayout()
+        addSubViewsAndlayout()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -84,18 +70,28 @@ class TableViewCell: UITableViewCell {
     }
     
     func addSubViewsAndlayout() {
-     //will crash if not added
-    
-    let screenwidth = UIScreen.main.bounds.width //get any other properties you need
-    
-    cellView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 1).isActive = true
-    cellView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-    cellView.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor, constant: 1).isActive = true
-//    cellView.rightAnchor.constraint(equalTo: otherViewToTheSide.rightAnchor, constant: -24).isActive = true
-    
+        
+        cellView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 5).isActive = true
+        cellView.centerYAnchor.constraint(equalTo:self.contentView.centerYAnchor).isActive = true
+        cellView.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor).isActive = true
+        cellView.leadingAnchor.constraint(equalTo:self.contentView.leadingAnchor, constant: 10).isActive = true
+        cellView.heightAnchor.constraint(equalToConstant:110).isActive = true
+        cellView.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, constant: -20).isActive = true
+        
+        mainImageView.centerYAnchor.constraint(equalTo:self.cellView.centerYAnchor).isActive = true
+        mainImageView.leadingAnchor.constraint(equalTo:self.cellView.leadingAnchor, constant: 10).isActive = true
+        mainImageView.widthAnchor.constraint(equalToConstant:110).isActive = true
+        mainImageView.heightAnchor.constraint(equalToConstant:100).isActive = true
+        
+        topLabel.topAnchor.constraint(equalTo: self.mainImageView.topAnchor, constant: 20).isActive = true
+        topLabel.leadingAnchor.constraint(equalTo: self.mainImageView.trailingAnchor, constant: 30).isActive = true
+        topLabel.trailingAnchor.constraint(equalTo: self.cellView.trailingAnchor, constant: -10).isActive = true
+        
+        bottomLabel.topAnchor.constraint(equalTo: self.topLabel.bottomAnchor, constant: 15).isActive = true
+        bottomLabel.leadingAnchor.constraint(equalTo: self.mainImageView.trailingAnchor, constant: 30).isActive = true
+        bottomLabel.trailingAnchor.constraint(equalTo: self.cellView.trailingAnchor, constant: -10).isActive = true
+        
     }
-
-
     
     override func awakeFromNib() {
         super.awakeFromNib()

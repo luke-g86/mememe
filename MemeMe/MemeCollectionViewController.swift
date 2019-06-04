@@ -20,7 +20,7 @@ class MemeCollectionViewController: UIViewController, UICollectionViewDelegate, 
         let width = (view.frame.size.width - 25) / 3
         let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         layout.itemSize = CGSize(width: width, height: width)
-        
+        self.navigationItem.title = "MemeMe"
         self.collectionView?.reloadData()
     }
     

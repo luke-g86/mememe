@@ -16,6 +16,7 @@ extension MemeData {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<MemeData> {
         return NSFetchRequest<MemeData>(entityName: "MemeData")
     }
+
     
     @NSManaged public var bottomText: String?
     @NSManaged public var memedImage: NSData?
