@@ -12,21 +12,15 @@ import CoreData
 
 class MemeTableViewController: UIViewController {
     
-    
-    
-    
     let refreshControl = UIRefreshControl()
     let tableView = UITableView()
     
-    //    @IBOutlet weak var tableView: UITableView!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setTableView()
         loadList()
         self.navigationItem.title = "MemeMe"
-    
+        
         NotificationCenter.default.addObserver(self, selector: #selector(loadList), name: NSNotification.Name(rawValue: "reloadTable"), object: nil)
         
         constraints()
@@ -54,6 +48,11 @@ class MemeTableViewController: UIViewController {
         
     }
     
+    //MARK: Core data: loading data from the database.
+    
+    //As this is the first view after app's load.
+    //It fetches the data from the database and creates the array of memes
+    
     @objc func loadList() {
         
         let fetchRequest: NSFetchRequest<MemeData> = MemeData.fetchRequest()
@@ -69,27 +68,13 @@ class MemeTableViewController: UIViewController {
         self.refreshControl.endRefreshing()
     }
     
-    @objc func deleteData() {
-        
-        let fetchRequest: NSFetchRequest<MemeData> = MemeData.fetchRequest()
-        do {
-            let arrayOfMemes = try PersistanceService.context.fetch(fetchRequest)
-            PersistanceService.context.delete(arrayOfMemes[1])
-            PersistanceService.saveContext()
-            self.tableView.reloadData()
-        } catch {
-            let ac = UIAlertController(title: title, message: "Something went wrong", preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "Error", style: .default, handler: nil))
-            present(ac, animated: true)
-        }
-    }
-
     
     override func viewWillAppear(_ animated: Bool) {
         loadList()
         self.tabBarController?.tabBar.isHidden = false
     }
-
+    
+    // MARK: adding new meme
     
     @IBAction func addButtonTapped(_ sender: AnyObject) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -102,9 +87,10 @@ class MemeTableViewController: UIViewController {
 extension MemeTableViewController: UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("Items \(MemeData.arrayOfMemes.count)")
         return MemeData.arrayOfMemes.count
     }
+    
+    //MARK: loading memes into the table
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MemeTebleView") as! TableViewCell
@@ -114,12 +100,14 @@ extension MemeTableViewController: UITableViewDataSource, UITableViewDelegate, U
         return cell
     }
     
+    // MARK: Launching Preview Controller
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
+        
         let pc = self.storyboard?.instantiateViewController(withIdentifier: "PreviewController") as! PreviewViewController
         pc.imageToDisplay = UIImage(data: MemeData.arrayOfMemes[(indexPath as NSIndexPath).row].memedImage! as Data)
         pc.view.backgroundColor = UIColor.white
-
+        
         self.navigationController?.pushViewController(pc, animated: true)
     }
     
@@ -128,12 +116,16 @@ extension MemeTableViewController: UITableViewDataSource, UITableViewDelegate, U
         return 118
     }
     
+    //MARK: Table animation
+    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         cell.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         UIView.animate(withDuration: 0.4) {
             cell.transform = CGAffineTransform.identity
         }
     }
+    
+    //MARK: Table resize while changing orientation
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
@@ -153,11 +145,13 @@ extension MemeTableViewController: UITableViewDataSource, UITableViewDelegate, U
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-    return true
+        return true
     }
     
+    //MARK: Swipe to delete
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-
+        
         if (editingStyle == .delete) {
             
             //MARK: Deleting data from database

@@ -87,7 +87,11 @@ class GenerateMemeViewController: UIViewController, UIImagePickerControllerDeleg
         save()
     }
     
+    //MARK: Saving data
+    
     func save() {
+        
+        // Saving data using CoreData database
        
         var usersMeme = Meme(topText: topText, bottomText: bottomText, originalImage: imageView.image!, memedImage: generateMemedImage())
         
@@ -186,7 +190,7 @@ class GenerateMemeViewController: UIViewController, UIImagePickerControllerDeleg
     }
 
     //MARK: Defining text fields and their delegates
-    // If there's already set and saved text it might be used
+    // If there's already set and saved text it might be reused
     func setText(_ topText: String? = nil, _ bottomText: String? = nil) {
         // Setting default values for text
         if ((topText != nil) && (bottomText != nil)){

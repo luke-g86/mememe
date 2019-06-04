@@ -15,6 +15,8 @@ class PreviewViewController: UIViewController, UINavigationControllerDelegate {
     
     var imageToDisplay: UIImage?
     
+    // Preview Controller to display selected image with share button only
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

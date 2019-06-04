@@ -38,7 +38,7 @@ class TableViewCell: UITableViewCell {
     }()
     
     lazy var bottomLabel: UILabel = {
-        let label = UILabel() //frame: CGRect(x: 160, y: 40, width: cellView.frame.width - 116, height: 30))
+        let label = UILabel()
         label.textAlignment = .left
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -68,6 +68,8 @@ class TableViewCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    //MARK: Constraints
     
     func addSubViewsAndlayout() {
         

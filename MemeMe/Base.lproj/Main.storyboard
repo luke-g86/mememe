@@ -233,6 +233,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="wlB-Px-KRg"/>
                     <tabBar key="tabBar" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" id="NGN-kw-qC8">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
@@ -266,7 +267,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="tabCollection-blue-small" width="40" height="40"/>
-        <image name="tabTable-blue-small" width="40" height="40"/>
+        <image name="tabCollection-blue-small" width="35" height="35"/>
+        <image name="tabTable-blue-small" width="35" height="35"/>
     </resources>
 </document>

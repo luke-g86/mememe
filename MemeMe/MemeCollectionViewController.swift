@@ -21,6 +21,7 @@ class MemeCollectionViewController: UIViewController, UICollectionViewDelegate, 
         let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         layout.itemSize = CGSize(width: width, height: width)
         self.navigationItem.title = "MemeMe"
+        self.collectionView.backgroundColor = UIColor.lightGray
         self.collectionView?.reloadData()
     }
     
@@ -29,6 +30,8 @@ class MemeCollectionViewController: UIViewController, UICollectionViewDelegate, 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return MemeData.arrayOfMemes.count
     }
+    
+    // MARK: loading data into the Collection View from array of memes
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
@@ -44,6 +47,8 @@ class MemeCollectionViewController: UIViewController, UICollectionViewDelegate, 
         return CGSize(width: 50, height: 50)
     }
     
+      // MARK: Launching PreviewController
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath:IndexPath) {
         
         let pc = self.storyboard?.instantiateViewController(withIdentifier: "PreviewController") as! PreviewViewController
@@ -52,6 +57,8 @@ class MemeCollectionViewController: UIViewController, UICollectionViewDelegate, 
         self.navigationController?.pushViewController(pc, animated: true)
         
     }
+    
+    // MARK: CollectionView animations
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         cell.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
