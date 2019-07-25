@@ -74,24 +74,48 @@
 		04C5FE44225FD15A00AF24A7 /* MemeMe */ = {
 			isa = PBXGroup;
 			children = (
-				04FEEC3C22959AF200B9B2CF /* MemeData+CoreDataClass.swift */,
-				04FEEC3D22959AF200B9B2CF /* MemeData+CoreDataProperties.swift */,
 				04C5FE45225FD15A00AF24A7 /* AppDelegate.swift */,
 				04C5FE49225FD15A00AF24A7 /* Main.storyboard */,
-				0477E11122A382E500CD467E /* PreviewViewController.swift */,
-				04438B042295354800A2BF61 /* PersistanceService.swift */,
-				04C5FE47225FD15A00AF24A7 /* GenerateMemeViewController.swift */,
-				04438B022295322600A2BF61 /* MemeTableViewController.swift */,
-				0477E10F22A0B4C700CD467E /* TableViewCell.swift */,
-				0477E10D229D9A4600CD467E /* MemeCollectionViewCell.swift */,
-				0477E109229D19EF00CD467E /* MemeCollectionViewController.swift */,
-				04438B2D229538AA00A2BF61 /* memeMeData.xcdatamodeld */,
-				048C00F022831BE7001080C1 /* Meme.swift */,
+				C3A705F822E9595C001D05E8 /* Model */,
+				C3A705F722E9594F001D05E8 /* Views */,
+				C3A705F622E9592E001D05E8 /* Controllers */,
 				0477E11422A4A28800CD467E /* Media.xcassets */,
 				04C5FE4E225FD15D00AF24A7 /* LaunchScreen.storyboard */,
 				04C5FE51225FD15D00AF24A7 /* Info.plist */,
 			);
 			path = MemeMe;
+			sourceTree = "<group>";
+		};
+		C3A705F622E9592E001D05E8 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				04438B022295322600A2BF61 /* MemeTableViewController.swift */,
+				0477E11122A382E500CD467E /* PreviewViewController.swift */,
+				04C5FE47225FD15A00AF24A7 /* GenerateMemeViewController.swift */,
+				0477E109229D19EF00CD467E /* MemeCollectionViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		C3A705F722E9594F001D05E8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0477E10F22A0B4C700CD467E /* TableViewCell.swift */,
+				0477E10D229D9A4600CD467E /* MemeCollectionViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C3A705F822E9595C001D05E8 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				04FEEC3D22959AF200B9B2CF /* MemeData+CoreDataProperties.swift */,
+				04FEEC3C22959AF200B9B2CF /* MemeData+CoreDataClass.swift */,
+				04438B042295354800A2BF61 /* PersistanceService.swift */,
+				048C00F022831BE7001080C1 /* Meme.swift */,
+				04438B2D229538AA00A2BF61 /* memeMeData.xcdatamodeld */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
